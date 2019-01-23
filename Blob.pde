@@ -10,26 +10,28 @@ class Blob{
   float maxX;
   float maxY;
   
-  int timer = 100; // steuert, dass blob nur gelöscht wird, wenn er inaktiv ist
+  int lifespan = 100; // steuert, dass blob nur gelöscht wird, wenn er inaktiv ist
   
   int blobId = 0;
   
   boolean taken = false;
-  
-  ArrayList<PVector> points;
-  
+
   Blob(float x, float y) {
     this.minX = x;
     this.minY = y;
     this.maxX = x;
     this.maxY = y;
-    this.points = new ArrayList<PVector>();
-    points.add(new PVector(x, y));
+  }
+  
+  boolean checkLife() {
+    lifespan--;
+    if (lifespan < 0 ) return true;
+    else return false;
   }
   
   void show() {
     stroke(0);
-    fill(255);
+    fill(255, 100);
     strokeWeight(2);
     rectMode(CORNERS);
     rect(minX, minY, maxX, maxY);
@@ -38,8 +40,6 @@ class Blob{
     textSize(64);
     fill(0);
     text(blobId, minX + (maxX - minX)* 0.5, maxY - 10); // Center of Rect
-    textSize(32);
-    text(timer, minX + (maxX - minX)* 0.5, minX - 10);
   }
   
   void add(float x, float y) {
@@ -72,10 +72,6 @@ class Blob{
     // nächst gelegener Pixel des Blobs suchen
     float cx = max(min(x, maxX), minX);
     float cy = max(min(y, maxY), minY);
-    
-    // Zentrum der Blobs herausfinden
-    // float cx = (minX + maxX) / 2; 
-    // float cy = (minY + maxY) / 2; 
   
     // Distanz
     float d = distSq(cx, cy, x, y);
